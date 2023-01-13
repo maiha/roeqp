@@ -1,0 +1,188 @@
+#ROEQP-controls {
+    border-bottom-color: rgb(118, 118, 118);
+    margin-bottom: 10px;
+}
+
+#ROEQP-controls:before, #ROEQP-controls:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.ROEQP-control {
+    float: left;
+    position: relative;
+    margin-right: 30px;
+}
+
+.ROEQP-invt {
+    float: left;
+    position: relative;
+    margin: 10px;
+}
+
+.ROEQP-invt-form {
+    float: left;
+    position: relative;
+    width: 450px;
+    z-index: 200;
+}
+
+.ROEQP-invt-form textarea {
+    display: block;
+    overflow-x: hidden;
+}
+.ROEQP-invt-form ::placeholder {
+    color: #aaa;
+}
+
+.ROEQP-invt-form button {
+    display: inline-block;
+}
+
+.ROEQP-invt-view {
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(118, 118, 118);
+    z-index: 100;
+}
+
+/****************************************************************************
+ ROEQP-invt-view-default 
+****************************************************************************/
+.ROEQP-invt-view-default .view {
+    float: left;
+    position: relative;
+    width: 450px;
+    height: 500px;
+}
+
+.ROEQP-invt-view-default .grid {
+    position: absolute;
+    width: 250px;
+    height: 100px;
+    background-position: center center;
+    background-size: auto 90px;
+    background-repeat: no-repeat;
+    background-position-y: 10px;
+}
+
+.ROEQP-invt-view-default .grid-0 { top:   0px; left:   0px; }
+.ROEQP-invt-view-default .grid-1 { top:   0px; left: 200px; }
+.ROEQP-invt-view-default .grid-2 { top: 100px; left:   0px; }
+.ROEQP-invt-view-default .grid-3 { top: 100px; left: 200px; }
+.ROEQP-invt-view-default .grid-4 { top: 200px; left:   0px; }
+.ROEQP-invt-view-default .grid-5 { top: 200px; left: 200px; }
+.ROEQP-invt-view-default .grid-6 { top: 300px; left:   0px; }
+.ROEQP-invt-view-default .grid-7 { top: 300px; left: 200px; }
+.ROEQP-invt-view-default .grid-8 { top: 400px; left:   0px; }
+.ROEQP-invt-view-default .grid-9 { top: 400px; left: 200px; }
+
+.ROEQP-invt-view-default .grid > .name {
+    text-align: center;
+    line-height: 1.6;
+    color: #01aaed;
+}
+
+/****************************************************************************
+ ROEQP-invt-view-real 
+****************************************************************************/
+.ROEQP-invt-view-real .view {
+    float: left;
+    position: relative;
+    width: 450px;
+    height: 500px;
+    z-index: 100;
+}
+
+.ROEQP-invt-view-real .grid {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background-position: center center;
+    background-size: auto 90px;
+    background-repeat: no-repeat;
+    background-position-y: 10px;
+    border: dashed red;
+    border-width: 0;
+}
+
+.ROEQP-invt-view-real .grid-0 {  /* 頭上段 */
+    top:  0px;
+    left: 150px;
+    background-size: auto 170px;
+    z-index: 101;
+}
+.ROEQP-invt-view-real .grid-1 {  /* 頭中段 */
+    top: 30px;
+    left: 270px;
+    height: 110px;
+    background-size: auto 100px;
+    z-index: 102;
+}
+.ROEQP-invt-view-real .grid-2 {  /* 頭下段 */
+    top: 30px;
+    left: 35px;
+    height: 110px;
+    background-size: auto 100px;
+    z-index: 102;
+}    
+.ROEQP-invt-view-real .grid-3 {  /* 鎧 */
+    top: 155px;
+    left: 125px;
+    width: 200px;
+    height: 200px;
+    background-size: auto 200px;
+    background-position-y: 5px;
+    z-index: 104;
+}
+    
+.ROEQP-invt-view-real .grid-4 {  /* 右手 */ 
+    top: 140px;
+    left: 0px;
+    background-size: auto 150px;
+    z-index: 103;
+}
+.ROEQP-invt-view-real .grid-5 {  /* 左手 */
+    top: 140px;
+    left: 300px;
+    background-size: auto 150px;
+    z-index: 103;
+}
+.ROEQP-invt-view-real .grid-6 {  /* 肩 */
+    top: 300px;
+    left: 0px;
+    background-size: auto 150px;
+    z-index: 105;
+}
+.ROEQP-invt-view-real .grid-7 {  /* 足 */
+    top: 350px;
+    left: 150px;
+    background-size: auto 150px;
+    background-position-y: -10px;
+    z-index: 106;
+}
+.ROEQP-invt-view-real .grid-8 {  /* アクセ1 */
+    top:  300px;
+    left: 300px;
+    height: 110px;
+    background-size: auto 100px;
+    z-index: 105;
+}
+.ROEQP-invt-view-real .grid-9 {  /* アクセ2 */
+    top:  390px;
+    left: 300px;
+    height: 110px;
+    background-size: auto 100px;
+    z-index: 108;
+}
+.ROEQP-invt-view-real .grid > .name {
+    text-align: center;
+    line-height: 1.6;
+    color: #01aaed;
+    width: 200%;
+    margin-left: -50%;
+    overflow-x: auto;
+    white-space: nowrap;
+    z-index: 200;
+}
