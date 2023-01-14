@@ -63,25 +63,72 @@
 
 .ROEQP-invt-view-default .grid {
     position: absolute;
-    width: 250px;
+    width: 225px;
     height: 100px;
 }
 
 .ROEQP-invt-view-default .grid-0 { top:   0px; left:   0px; }
-.ROEQP-invt-view-default .grid-1 { top:   0px; left: 200px; }
+.ROEQP-invt-view-default .grid-1 { top:   0px; left: 225px; }
 .ROEQP-invt-view-default .grid-2 { top: 100px; left:   0px; }
-.ROEQP-invt-view-default .grid-3 { top: 100px; left: 200px; }
+.ROEQP-invt-view-default .grid-3 { top: 100px; left: 225px; }
 .ROEQP-invt-view-default .grid-4 { top: 200px; left:   0px; }
-.ROEQP-invt-view-default .grid-5 { top: 200px; left: 200px; }
+.ROEQP-invt-view-default .grid-5 { top: 200px; left: 225px; }
 .ROEQP-invt-view-default .grid-6 { top: 300px; left:   0px; }
-.ROEQP-invt-view-default .grid-7 { top: 300px; left: 200px; }
+.ROEQP-invt-view-default .grid-7 { top: 300px; left: 225px; }
 .ROEQP-invt-view-default .grid-8 { top: 400px; left:   0px; }
-.ROEQP-invt-view-default .grid-9 { top: 400px; left: 200px; }
+.ROEQP-invt-view-default .grid-9 { top: 400px; left: 225px; }
+
+.ROEQP-invt-view-default .grid img.icon {
+    display: block;
+    position: absolute;
+}
+
+.ROEQP-invt-view-default .grid-0 > img.icon,
+.ROEQP-invt-view-default .grid-2 > img.icon,
+.ROEQP-invt-view-default .grid-4 > img.icon,
+.ROEQP-invt-view-default .grid-6 > img.icon,
+.ROEQP-invt-view-default .grid-8 > img.icon {
+    left: 0;
+}
+
+.ROEQP-invt-view-default .grid-1 > img.icon,
+.ROEQP-invt-view-default .grid-3 > img.icon,
+.ROEQP-invt-view-default .grid-5 > img.icon,
+.ROEQP-invt-view-default .grid-7 > img.icon,
+.ROEQP-invt-view-default .grid-9 > img.icon {
+    right: 0;
+}
 
 .ROEQP-invt-view-default .grid > .name {
-    text-align: center;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 135px;
+    padding: 15px;
     line-height: 1.6;
     color: #01aaed;
+    overflow-x: auto;
+    white-space: inherit;
+    z-index: 200;
+}
+
+.ROEQP-invt-view-default .grid-0 > .name,
+.ROEQP-invt-view-default .grid-2 > .name,
+.ROEQP-invt-view-default .grid-4 > .name,
+.ROEQP-invt-view-default .grid-6 > .name,
+.ROEQP-invt-view-default .grid-8 > .name {
+    left: 70px;
+}
+
+.ROEQP-invt-view-default .grid-1 > .name,
+.ROEQP-invt-view-default .grid-3 > .name,
+.ROEQP-invt-view-default .grid-5 > .name,
+.ROEQP-invt-view-default .grid-7 > .name,
+.ROEQP-invt-view-default .grid-9 > .name {
+    left: 0;
 }
 
 /****************************************************************************
