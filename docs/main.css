@@ -65,10 +65,6 @@
     position: absolute;
     width: 250px;
     height: 100px;
-    background-position: center center;
-    background-size: auto 90px;
-    background-repeat: no-repeat;
-    background-position-y: 10px;
 }
 
 .ROEQP-invt-view-default .grid-0 { top:   0px; left:   0px; }
@@ -103,84 +99,117 @@
     position: absolute;
     width: 150px;
     height: 150px;
-    background-position: center center;
-    background-size: auto 90px;
-    background-repeat: no-repeat;
-    background-position-y: 10px;
     border: dashed red;
     border-width: 0;
+}
+
+.ROEQP-invt-view-real .grid img.icon {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: 100%;
 }
 
 .ROEQP-invt-view-real .grid-0 {  /* 頭上段 */
     top:  0px;
     left: 150px;
-    background-size: auto 170px;
     z-index: 101;
 }
+.ROEQP-invt-view-real .grid-0 img.icon {
+    top: 25%;
+    height: 120%;
+}
+
 .ROEQP-invt-view-real .grid-1 {  /* 頭中段 */
     top: 30px;
     left: 270px;
     height: 110px;
-    background-size: auto 100px;
     z-index: 102;
 }
+.ROEQP-invt-view-real .grid-1 img.icon {
+    top: 15%;
+    height: 90%;
+}
+
 .ROEQP-invt-view-real .grid-2 {  /* 頭下段 */
     top: 30px;
     left: 35px;
     height: 110px;
-    background-size: auto 100px;
     z-index: 102;
 }    
+.ROEQP-invt-view-real .grid-2 img.icon {
+    top: 15%;
+    height: 90%;
+}
+
 .ROEQP-invt-view-real .grid-3 {  /* 鎧 */
-    top: 155px;
+    top: 160px;
     left: 125px;
     width: 200px;
     height: 200px;
-    background-size: auto 200px;
-    background-position-y: 5px;
     z-index: 104;
 }
-    
+
 .ROEQP-invt-view-real .grid-4 {  /* 右手 */ 
     top: 140px;
     left: 0px;
-    background-size: auto 150px;
     z-index: 103;
 }
+.ROEQP-invt-view-real .grid-4 img.icon {
+    top: 15%;
+}
+
 .ROEQP-invt-view-real .grid-5 {  /* 左手 */
     top: 140px;
     left: 300px;
-    background-size: auto 150px;
     z-index: 103;
 }
+.ROEQP-invt-view-real .grid-5 img.icon {
+    top: 15%;
+}
+
 .ROEQP-invt-view-real .grid-6 {  /* 肩 */
     top: 300px;
     left: 0px;
-    background-size: auto 150px;
     z-index: 105;
 }
+
 .ROEQP-invt-view-real .grid-7 {  /* 足 */
-    top: 350px;
+    top: 340px;
     left: 150px;
-    background-size: auto 150px;
-    background-position-y: -10px;
     z-index: 106;
 }
+.ROEQP-invt-view-real .grid-7 img.icon {
+    top: 0;
+}
+
 .ROEQP-invt-view-real .grid-8 {  /* アクセ1 */
     top:  300px;
     left: 300px;
     height: 110px;
-    background-size: auto 100px;
     z-index: 105;
 }
+.ROEQP-invt-view-real .grid-8 img.icon {
+    height: 90%;
+}
+
 .ROEQP-invt-view-real .grid-9 {  /* アクセ2 */
     top:  390px;
     left: 300px;
     height: 110px;
-    background-size: auto 100px;
     z-index: 108;
 }
+.ROEQP-invt-view-real .grid-9 img.icon {
+    height: 90%;
+}
+
 .ROEQP-invt-view-real .grid > .name {
+    display: block;
+    position: absolute;
     text-align: center;
     line-height: 1.6;
     color: #01aaed;
@@ -189,4 +218,12 @@
     overflow-x: auto;
     white-space: nowrap;
     z-index: 200;
+}
+
+div.copyright {
+    clear: both;
+}
+div.copyright p {
+    margin: 0 5px;
+    line-height: 1.5;
 }

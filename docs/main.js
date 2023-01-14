@@ -84,11 +84,10 @@ class Inventory {
       console.error(`ROEQP: no grids[${pos}]`, item)
       return
     }
-    grid.css("background-image", "")
     grid.empty()
 
     if (item) {
-      grid.css("background-image", `url(https://rotool.gungho.jp/icon/${item.id}.png)`)
+      grid.append($('<img>', {class: "icon", src: `https://rotool.gungho.jp/icon/${item.id}.png`}))
       grid.append($('<div>', {class: "name", text: item.label()}))
     }
   }
