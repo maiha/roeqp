@@ -1,3 +1,7 @@
+#ROEQP-changelog .data {
+    display: none;
+}
+
 #ROEQP-controls {
     border-bottom-color: rgb(118, 118, 118);
     margin-bottom: 10px;

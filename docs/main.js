@@ -13,13 +13,13 @@ class Inventory {
   grids;
   textarea;
   items = [];
+  comments = [];
   opts = {
     normalize_source: true,
     source: null,
     placeholder: "",
   };
   constructor(root, items, opts) {
-    console.debug(opts)
     this.items = items || []
     this.opts  = Object.assign(this.opts, opts || {})
 
@@ -31,8 +31,11 @@ class Inventory {
 
   update(opts) {
     opts ??= {}
-    if (opts.source) this.textarea?.val(opts.source)
-    this.items = Roeqp.scan(this.textarea?.val() || '')
+    if (opts.source) this.opts.source = opts.source
+    if (this.opts.source) this.textarea?.val(this.opts.source)
+    const source = this.textarea?.val() || ''
+    this.items = Roeqp.scan(source)
+    this.comments = source.match(/^\s*(# .*?)$/mg)?.map(i => i.trim()) || []
     this.render()
   }
 
@@ -40,6 +43,8 @@ class Inventory {
     if (this.opts.normalize_source) {
       let text = ''
       this.items.forEach(item => text += `${item.label()}\n`)
+      text += "\n"
+      this.comments.forEach(comment => text += `${comment}\n`)
       this.textarea.val(text) 
     }
 
@@ -107,15 +112,15 @@ class Inventory {
       /*
         <div class="ROEQP-invt-form form">
           <button type="button" onclick="$('.source').text('...')">猫</button>
-          <textarea name="source" cols="35" rows="30"></textarea>
+          <textarea name="source" rows="20"></textarea>
           <button type="button" onclick="ROEQP.scan(...)">読み込み</button>
         </div>
       */
 
-      // <textarea name="source" cols="35" rows="30"></textarea>
+      // <textarea name="source" rows="20"></textarea>
       const placeholder = String(this.opts.placeholder).replace(/^\s+/mg,'').trim()
       const source = this.opts.source ?? this.source_from_samples()
-      const textarea = $('<textarea>', {name: "source", width: '100%', rows: 12, text: source, placeholder: placeholder})
+      const textarea = $('<textarea>', {name: "source", width: '100%', rows: 20, text: source, placeholder: placeholder})
 
       // <button type="button" onclick="$('.source').text('...')">猫</button>
       $.each(Object(this.opts.samples), (name, text) => {
@@ -127,7 +132,7 @@ class Inventory {
 
       // <button type="button" onclick="ROEQP.scan(...)">再描画</button>
       const button = $('<button>', {type: "button", text: "再描画"})
-      button.click(() => { invt.update() })
+      button.click(() => { invt.update({source: textarea.val()}) })
 
       div.append(textarea).append(button)
       this.invt.append(div)
@@ -256,13 +261,23 @@ ROEQP.read_samples = function(root) {
   $(root).find('.sample').each(function(index){
     const el = $(this)
     const label = String(el.data('label'))
-    const sample = String(el.text()).replace(/^\s+/mg,'').trim()
+    let sample = String(el.text()).replace(/^\s+/mg,'').trim()
+    const source = el.data("source")
+    if (source && source.match(/^http/)) sample += `\n# ${source}\n`
     console.debug("read_samples", label, sample)
     if (label && sample) {
       samples[label] = sample
     }
   })
   return samples
+}
+
+ROEQP.changelog = function(root) {
+  const label = $(root).find('.label')
+  const data  = $(root).find('.data').text().replace(/^\s+/mg,'').trim()
+  const tip   = data.split(/\n/).slice(0,2).join("\n")
+  label.addClass("qtip tip-left")
+  label.attr("data-tip", tip)
 }
 
 ROEQP.scan = function(text, invt) {

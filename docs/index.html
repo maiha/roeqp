@@ -3,10 +3,10 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <title>RO装備</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.slim.min.js" integrity="sha512-jxwTCbLJmXPnV277CvAjAcWAjURzpephk0f0nO2lwsvcoDMqBdy1rh1jEwWWTabX1+Grdmj9GFAgtN22zrV0KQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="main.css?1673603877" type="text/css">
-    <link rel="stylesheet" href="tooltip.css?1673631762" type="text/css">
+    <link rel="stylesheet" href="main.css?1673689360" type="text/css">
+    <link rel="stylesheet" href="tooltip.css?1673635296" type="text/css">
     <script type="text/javascript" charset="utf-8" src="roeqp.js?1673620041"></script>
-    <script type="text/javascript" charset="utf-8" src="main.js?1673436848"></script>
+    <script type="text/javascript" charset="utf-8" src="main.js?1673689413"></script>
   </head>
   <body>
     <div id="ROEQP-controls">
@@ -43,7 +43,13 @@
         <button onclick="ROEQP.change_margin(0)">なし</button>
       </div>
       <div class="ROEQP-control">
-        <div class="qtip tip-bottom" data-tip="2023/01/13 短い名前が先にヒットする不具合を修正">更新情報</div>
+        <div id="ROEQP-changelog">
+          <div class="label">更新情報</div>
+          <pre class="data">
+            2023/01/14 '#'をコメントとして追加
+            2023/01/13 短い名前が先にヒットする不具合を修正
+          </pre>
+        </div>
       </div>
     </div>
 
@@ -110,7 +116,6 @@
       </div>
 
       <div class="sample" data-label="朧(1.5G)" data-source="まいは">
-        # [必中100%][SP回復]
         +4剛勇無双の紋帽子
         +6剛勇無双の甲胄
         +7ワースホイール
@@ -118,10 +123,11 @@
         +6剛勇無双の神輿
         +6剛勇無双の貫
         螺旋風魔の宝珠#DEF50%無視(x2)
+        # 必中100%
+        # SP回復
       </div>
 
       <div class="sample" data-label="朧(3G)" data-source="https://idavollpanda.blog.fc2.com/blog-entry-438.html">
-        # [必中100%][SP回復]
         +7剛勇無双の紋帽子
         セブン-イレブンヘッドホン
         隷属の首輪
@@ -132,6 +138,10 @@
         +6剛勇無双の貫
         螺旋風魔の宝珠
         螺旋風魔の宝珠
+        # 詠唱100%カット、クールタイムカット、確定吸収
+        # DEF100%無視
+        # 必中100%
+        # SP回復効果
       </div>
 
       <div class="sample" data-label="朧(αコア)" data-source="https://idavollpanda.blog.fc2.com/blog-entry-427.html">
@@ -158,6 +168,14 @@
         +10名も無き剣士のブーツ
         螺旋風魔の宝珠
         アルファコア
+        # [10神輿との比較]
+        # ✅念属性耐性+63%
+        # ✅MaxHP+18%
+        # ✅DEF100%無視が不要
+        # ✅生存力アップ
+        # ❌火力が2割ダウン
+        # ❌必中が25%減る
+        # ❌集中力向上(サイト)がない
       </div>
 
       <div class="sample" data-label="朧(極・乱華)" data-source="https://idavollpanda.blog.fc2.com/blog-entry-453.html#blog441_02">
@@ -171,6 +189,12 @@
         +10名も無き剣士のブーツ
         螺旋風魔の宝珠
         アルファコア
+        # 最大HP：231836
+        # 最大SP：6743
+        # DEF：1758
+        # MDEF：50
+        # スキルディレイ：-75%
+        # 変動詠唱(INT/2+DEX)：285.5 (>= 265)
       </div>
 
       <div class="sample" data-label="朧(極・爆裂)" data-source="https://idavollpanda.blog.fc2.com/blog-entry-453.html#blog441_03">
@@ -222,7 +246,7 @@
         +8イージスシステム
         +10名も無き剣士のブーツ
         ノブレスオブリージュ
-        # 螺旋風魔の宝珠
+        螺旋風魔の宝珠
         # 最大HP：209524
         # 最大SP：7261
         # DEF：1848
@@ -231,10 +255,10 @@
         # 変動詠唱(INT/2+DEX)：259.5 (< 265)
       </div>
     </div>
-  </div>
 
     <script>
       $(document).ready(function() {
+        ROEQP.changelog('#ROEQP-changelog')
         ROEQP.activate_opts = {
           placeholder: "ファントムオブマスカレード\nもふもふラブリーフォックス",
           samples: ROEQP.read_samples('#ROEQP-samples'),
