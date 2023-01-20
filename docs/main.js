@@ -273,10 +273,12 @@ ROEQP.read_samples = function(root) {
 
 ROEQP.changelog = function(root) {
   const label = $(root).find('.label')
-  const data  = $(root).find('.data').text().replace(/^\s+/mg,'').trim()
-  const tip   = data.split(/\n/).slice(0,2).join("\n")
+  const data  = $(root).find('.data')
+  const text  = data.text().replace(/^\s+/mg,'').trim()
+  const tip   = text.split(/\n/).slice(0,2).join("\n")
   label.addClass("qtip tip-left")
   label.attr("data-tip", tip)
+  label.click(() => { data.toggle() })
 }
 
 ROEQP.scan = function(text, invt) {
