@@ -3,10 +3,10 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <title>RO装備</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.slim.min.js" integrity="sha512-jxwTCbLJmXPnV277CvAjAcWAjURzpephk0f0nO2lwsvcoDMqBdy1rh1jEwWWTabX1+Grdmj9GFAgtN22zrV0KQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="main.css?1674778427" type="text/css">
+    <link rel="stylesheet" href="main.css?1674792353" type="text/css">
     <link rel="stylesheet" href="tooltip.css?1673635296" type="text/css">
-    <script type="text/javascript" charset="utf-8" src="roeqp.js?1674204300"></script>
-    <script type="text/javascript" charset="utf-8" src="main.js?1674782447"></script>
+    <script type="text/javascript" charset="utf-8" src="roeqp.js?1674794076"></script>
+    <script type="text/javascript" charset="utf-8" src="main.js?1674794166"></script>
   </head>
   <body>
     <div id="ROEQP-controls">
@@ -21,19 +21,28 @@
         <button onclick="ROEQP.enable_name(false)">なし</button>
       </div>
       <div class="ROEQP-control">
+        %表示
+        <button onclick="ROEQP.change_bars(ROEQP.Bool.True)">あり</button>
+        <button onclick="ROEQP.change_bars(ROEQP.Bool.False)">なし</button>
+      </div>
+      <div class="ROEQP-control">
+        入力
+        <button onclick="ROEQP.change_form(ROEQP.Bool.True)">あり</button>
+        <button onclick="ROEQP.change_form(ROEQP.Bool.False)">なし</button>
+      </div>
+      <div class="ROEQP-control">
+        <button onclick="ROEQP.new_inventory('#ROEQP-data', {source: ''})">＋キャラ追加</button>
+      </div>
+      <div class="ROEQP-control">
+        並び
+        <button onclick="ROEQP.change_align(ROEQP.Align.Right)">右</button>
+        <button onclick="ROEQP.change_align(ROEQP.Align.Bottom)">下</button>
+      </div>
+      <div class="ROEQP-control">
         枠線
         <button onclick="ROEQP.set_frame(ROEQP.Frame.Box)">外</button>
         <button onclick="ROEQP.set_frame(ROEQP.Frame.All)">全</button>
         <button onclick="ROEQP.set_frame(ROEQP.Frame.None)">消</button>
-      </div>
-      <div class="ROEQP-control">
-        入力フォーム
-        <button onclick="ROEQP.change_form(ROEQP.Form.Right)">右</button>
-        <button onclick="ROEQP.change_form(ROEQP.Form.Bottom)">下</button>
-        <button onclick="ROEQP.change_form(ROEQP.Form.Hide)">消</button>
-      </div>
-      <div class="ROEQP-control">
-        <button onclick="ROEQP.new_inventory('#ROEQP-data', {source: ''})">＋キャラ追加</button>
       </div>
       <div class="ROEQP-control">
         マージン
@@ -62,11 +71,22 @@
 
     <div id="ROEQP-samples" style="display: none;">
       <div class="sample" data-label="ミミミ" data-source="https://ragnarokonline.gungho.jp/campaign_event/event/bio-labo-quest-202211.html">
-        %80%[MaxHP+]
-        %79%[スキルディレイ]
-        %50%[固定詠唱時間-]
-        %30%[詠唱時間-]
+        %80%[MaxHP+%]
+        %28/80%[ASPD+%]
+        %240/300[Atk/Matk+]
         %20/30[全ステ+]
+        %103%[スキルディレイ-]
+        %50%[固定詠唱時間-]
+        %48%[詠唱時間-]
+        %5/5[ExtraStr]
+        %100%[Def/Mdef無視]
+        %100%[詠唱妨害不可]
+        %15/95%[無属性耐性]
+        %90/95%[水属性耐性]
+        %500/500[撃破時HP+]
+        %50/50[撃破時SP+]
+        %250/500[5秒毎にHP+]
+        %30/50[5秒毎にSP+]
 
         +9黎明のマジェスティックゴート
         くわえたチョコスティック
@@ -91,6 +111,11 @@
       </div>
 
       <div class="sample" data-label="物猫(上級)" data-source="http://ro-tamago.blog.jp/archives/12706963.html">
+        %100%[石化耐性]
+        %100%[Def無視]
+        %50%[固定詠唱時間-]
+        %100%[死の欲動]
+        
         +7セイフティフォックステイル
         +9ファントムオブマスカレード
         もふもふラブリーフォックス
@@ -268,6 +293,29 @@
         # スキルディレイ：-65%
         # 変動詠唱(INT/2+DEX)：259.5 (< 265)
       </div>
+
+      <div class="sample" data-label="10PoM">
+        %100%[石化耐性]
+        %100%[Def無視]
+        %50%[固定詠唱時間-]
+        %1/1[死の欲動]
+        %20%[スキルディレイ-]
+        +10ファントムオブマスカレード
+      </div>
+        
+      <div class="sample" data-label="10シャム">
+        %70%[固定詠唱時間-]
+        %100%[スキルディレイ-]
+        %1/1[グリード]
+        %1/1[ノクバ耐性]
+        %1/1[豪傑]
+        %200/500[Atk+]
+        %30/30[全ステ+(確率)]
+        %15/100[Mdef]
+        %10/60[ASPD+]
+        +10抱きつきシャムネコ
+      </div>
+        
     </div>
 
     <div class="copyright">
@@ -279,7 +327,7 @@
 
     <script>
       $(document).ready(function() {
-        ROEQP.changelog('#ROEQP-changelog')
+        ROEQP.changelog('#ROEQP-changelog', limit = 1)
         ROEQP.activate_opts = {
           placeholder: "ファントムオブマスカレード\nもふもふラブリーフォックス",
           samples: ROEQP.read_samples('#ROEQP-samples'),

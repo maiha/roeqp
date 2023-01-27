@@ -341,7 +341,7 @@ ROEQP.new_inventory = function(target, opts) {
   const div = $('<div>')
   $(target).append(div)
   ROEQP.activate(div, opts)
-  ROEQP.change_form(ROEQP.Form.Bottom)
+  ROEQP.change_align(ROEQP.Align.Bottom)
 }
 
 ROEQP.change_invt_style = function(target, name = 'real') {
@@ -351,19 +351,40 @@ ROEQP.change_invt_style = function(target, name = 'real') {
   target.removeClass().addClass(`${key} ${val}`)
 };
 
-ROEQP.Form = {
+ROEQP.Align = {
   Right: '右',
   Bottom: '下',
-  Hide: '消',
+};
+
+ROEQP.change_align = function(value) {
+  const css = Inventory.CSS
+  const key = `.${css.bars}, .${css.form}`
+  switch (value) {
+    case ROEQP.Align.Right:  $(key).css("float", "left"); break
+    case ROEQP.Align.Bottom: $(key).css("float", "none"); break
+  }
+};
+
+ROEQP.Bool = {
+  True: 'あり',
+  False: 'なし',
+};
+
+ROEQP.change_bars = function(value) {
+  const css = Inventory.CSS
+  const key = `.${css.bars}`
+  switch (value) {
+    case ROEQP.Bool.True:  $(key).show(); break
+    case ROEQP.Bool.False: $(key).hide(); break
+  }
 };
 
 ROEQP.change_form = function(value) {
   const css = Inventory.CSS
-  const key = `.${css.bars}, .${css.form}`
+  const key = `.${css.form}`
   switch (value) {
-    case ROEQP.Form.Right:  $(key).css("float", "left").show(); break
-    case ROEQP.Form.Bottom: $(key).css("float", "none").show(); break
-    case ROEQP.Form.Hide:   $(key).hide(); break
+    case ROEQP.Bool.True:  $(key).show(); break
+    case ROEQP.Bool.False: $(key).hide(); break
   }
 };
 
@@ -413,11 +434,11 @@ ROEQP.read_samples = function(root) {
   return samples
 }
 
-ROEQP.changelog = function(root) {
+ROEQP.changelog = function(root, limit) {
   const label = $(root).find('.label')
   const data  = $(root).find('.data')
   const text  = data.text().replace(/^\s+/mg,'').trim()
-  const tip   = text.split(/\n/).slice(0,2).join("\n")
+  const tip   = text.split(/\n/).slice(0, limit).join("\n")
   label.addClass("qtip tip-left")
   label.attr("data-tip", tip)
   label.click(() => { data.toggle() })

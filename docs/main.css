@@ -16,7 +16,7 @@
 .ROEQP-control {
     float: left;
     position: relative;
-    margin-right: 30px;
+    margin-right: 20px;
 }
 
 .ROEQP-invt {
@@ -65,20 +65,23 @@
     background-color:#fff;
 }
 
+.ROEQP-invt-bars .rank-100 div.progress  {
+    border: 1px #999 solid;
+}
 .ROEQP-invt-bars .rank-100 div.progress > div.bar {
-    background-color: #7fbf7f;
+    background: linear-gradient(-45deg, #F7DE05, #DA8E00, #EDAC06, #F7DE05, #ECB802, #DAAF08, #B67B03, #DA8E00, #EDAC06, #F7DE05, #ECB802, #EDAC06);
 }
 .ROEQP-invt-bars .rank-75 div.progress > div.bar {
-    background-color: #9eb4e5;
+    background-color: #7fbf7f;
 }
 .ROEQP-invt-bars .rank-50 div.progress > div.bar {
-    background-color: #fad76e;
+    background-color: #9eb4e5;
 }
 .ROEQP-invt-bars .rank-25 div.progress > div.bar {
-    background-color: #e2878f;
+    background-color: #999;
 }
 .ROEQP-invt-bars .rank-0 div.progress > div.bar {
-    background-color: #999;
+    background-color: #e2878f;
 }
 
 /****************************************************************************
