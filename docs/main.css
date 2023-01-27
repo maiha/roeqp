@@ -25,6 +25,65 @@
     margin: 10px;
 }
 
+/****************************************************************************
+ ROEQP-invt-bars
+****************************************************************************/
+.ROEQP-invt-bars {
+    float: left;
+    position: relative;
+    width: 450px;
+    z-index: 210;
+}
+
+.ROEQP-invt-bars .label {
+    width: 100px;
+    white-space: nowrap;
+    overflow-x: hidden;
+}
+
+.ROEQP-invt-bars .progress {
+    width: 290px;
+}
+
+.ROEQP-invt-bars .percent {
+    width: 50px;
+    white-space: nowrap;
+}
+
+.ROEQP-invt-bars div.progress {
+    width: 100%;
+    height: 15px;
+    background-color:#ececec;
+    position:relative;
+    border-radius:2px;
+    overflow: hidden;
+}
+
+.ROEQP-invt-bars div.progress > div.bar {
+    position:absolute;
+    height:100%;
+    background-color:#fff;
+}
+
+.ROEQP-invt-bars .rank-100 div.progress > div.bar {
+    background-color: #7fbf7f;
+}
+.ROEQP-invt-bars .rank-75 div.progress > div.bar {
+    background-color: #9eb4e5;
+}
+.ROEQP-invt-bars .rank-50 div.progress > div.bar {
+    background-color: #fad76e;
+}
+.ROEQP-invt-bars .rank-25 div.progress > div.bar {
+    background-color: #e2878f;
+}
+.ROEQP-invt-bars .rank-0 div.progress > div.bar {
+    background-color: #999;
+}
+
+/****************************************************************************
+ ROEQP-invt-form
+****************************************************************************/
 .ROEQP-invt-form {
     float: left;
     position: relative;
