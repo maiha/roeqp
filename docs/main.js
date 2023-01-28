@@ -1,3 +1,24 @@
+class DiffRatio {
+  diff;
+  ratio;
+
+  constructor(obj, diff) {
+    if (obj.constructor.name == 'DiffRatio') {
+      this.ratio = obj.ratio
+      this.diff = obj.diff
+    } else {
+      this.ratio = obj
+      this.diff = diff || DiffRatio.Diff.Nop
+    }
+  }
+}
+
+DiffRatio.Diff = {
+  Nop: 'nop',
+  Add: 'add',
+  Del: 'del',
+}
+
 // 特殊効果のレート情報
 class EffectRatio {
   name; // "固定詠唱"
@@ -14,6 +35,10 @@ class EffectRatio {
     this.max  = max || EffectRatio.default_max
     this.unit = unit
     this.pct  = Math.min(100, Math.trunc(this.val * 100 / this.max))
+  }
+
+  copy = function(opts) {
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this, opts)
   }
 
   serialize = function() {
@@ -67,7 +92,7 @@ class EffectRatio {
   static deserialize = function(v) {
     const md = v.match(EffectRatio.unapply_regexp)
     if (md) {
-      console.log(md)
+      console.debug(md)
       // ['%50/80%[固定詠唱]', '50', '/80', '80', '%', '固定詠唱', index: 0, input: '%50/80%[固定詠唱]'
       // ['%20/30[全ステ+]', '20', '/30', '30', '', '全ステ+', index: 0, input: '%20/30[全ステ+]'
       // ['%79%[ディレイ]', '79', undefined, undefined, '%', 'ディレイ', index: 0, input: '%79%[ディレイ]'
@@ -88,14 +113,17 @@ class Inventory {
   static CSS = {
     data: 'ROEQP-data',
     invt: 'ROEQP-invt',
+    smpl: 'ROEQP-invt-smpl',
     view: 'ROEQP-invt-view',
     bars: 'ROEQP-invt-bars',
     form: 'ROEQP-invt-form',
     grid: 'ROEQP-invt-view-grid',
+    flex: 'ROEQP-invt-flex',
   }
 
   invt;
   view;
+  smpl;
   bars;
   form;
   grids;
@@ -108,11 +136,15 @@ class Inventory {
     source: null,
     placeholder: "",
   };
+
+  used_pos = {}
+
   constructor(root, items, opts) {
     this.items = items || []
     this.opts  = Object.assign(this.opts, opts || {})
 
     this.invt  = this.construct_invt(root)
+    this.smpl  = this.construct_smpl()
     this.view  = this.construct_view()
     this.bars  = this.construct_bars()
     this.form  = this.construct_form()
@@ -132,6 +164,7 @@ class Inventory {
   }
 
   render() {
+    this.render_smpl()
     this.render_bars(this.ratios)
 
     if (this.opts.normalize_source) {
@@ -151,7 +184,7 @@ class Inventory {
 
     const used_pos = {}
     this.items.forEach(item => {
-      console.log(item)
+      console.debug(item)
       let pos = item.pos
       if (pos == 45) {
         if (!used_pos[4]) {
@@ -174,12 +207,36 @@ class Inventory {
       used_pos[pos] = item
       this.render_grid(pos, item);
     });
+    this.used_pos = used_pos // render_trimで使う。独立で呼ばれるのでキャッシュしておく
+
+    this.render_trim()
+  }
+
+  render_trim() {
+    let view_height = 500
+    if (ROEQP.opts.invt_style == 'real' && ROEQP.opts.view_trim) {
+      view_height = 0
+      for (const [pos, value] of Object.entries(this.used_pos)) {
+        const grid = this.view.find(`.grid-${pos}`)
+        const top  = parseInt(grid.css('top'), 10)
+        const height = parseInt(grid.css('height'), 10)
+        const y = top + height
+        if (Number.isInteger(y)) {
+          view_height = Math.max(view_height, y)
+        }
+      }
+      console.debug(`trim: max height to [${view_height}]`)
+    }
+    this.view.css('height', `${view_height}px`)
   }
 
   render_bars(ratios) {
     const table = $('<table>', {class: "bar"})
     console.debug(ratios)
-    $.each(ratios, (idx, ratio) => {
+    const diff_ratios = ratios.map(v => new DiffRatio(v))
+    $.each(diff_ratios, (idx, diff_ratio) => {
+      const diff  = diff_ratio.diff
+      const ratio = diff_ratio.ratio
       const rank = Math.trunc(ratio.pct / 25.0) * 25
     
       // <div class="name">固定詠唱</div>
@@ -190,7 +247,7 @@ class Inventory {
       progress.append($('<div>', {class: 'bar', width: `${ratio.pct}%`}))
       const percent  = $('<span>', {class: "percent", text: ratio.val_with_unit()})
 
-      const tr = $('<tr>', {class: `rank-${rank}`})
+      const tr = $('<tr>', {class: `rank-${rank} diff-${diff}`})
       tr.append($('<td>', {class: "label"}).append(label))
       tr.append($('<td>', {class: "progress"}).append(progress))
       tr.append($('<td>', {class: "percent"}).append(percent))
@@ -199,6 +256,14 @@ class Inventory {
 
     this.bars.empty()
     this.bars.append(table)
+  }
+
+  render_smpl() {
+    if (ROEQP.opts.smpl) {
+      this.smpl.show()
+    } else {
+      this.smpl.hide()
+    }
   }
 
   render_grid(pos, item) {
@@ -217,15 +282,32 @@ class Inventory {
 
   // root
   construct_invt(root) {
-    const css = Inventory.CSS.invt
-    root.addClass(`invt ${css}`)
+    const css = Inventory.CSS
+    root.addClass(`${css.invt} invt`)
     return root
+  }
+
+  construct_smpl() {
+    const invt = this
+    const css = Inventory.CSS
+    const div = $('<div>', {class: `${css.smpl} smpl`})
+
+    // <button type="button" onclick="$('.source').text('...')">猫</button>
+    $.each(Object(this.opts.samples), (name, text) => {
+      const button = $('<button>', {type: "button", text: name})
+      const source = text.replace(/^\s+/mg,'').trim()
+      button.click(() => { invt.update({source: source}) })
+      div.append(button)
+    })
+
+    this.invt.append(div)
+    return div
   }
 
   // root -> bars
   construct_bars() {
-    const css = Inventory.CSS.bars
-    const el = this.invt.find(`.${css}`)
+    const css = Inventory.CSS
+    const el = this.invt.find(`.${css.bars}`)
     if (el.length > 0) {
       return el
     } else {
@@ -233,7 +315,7 @@ class Inventory {
         <div class="ROEQP-invt-bars bars">
         </div>
       */
-      const div = $('<div>', {class: `${css} bars`})
+      const div = $('<div>', {class: `${css.flex} ${css.bars} bars`})
       this.invt.append(div)
       console.debug(`ROEQP: [#${this.invt.attr("id")}.${css}] is not found. generated.`)
       return div
@@ -242,13 +324,13 @@ class Inventory {
 
   // root -> form
   construct_form() {
-    const css = Inventory.CSS.form
-    const el = this.invt.find(`.${css}`)
+    const invt = this
+    const css = Inventory.CSS
+    const el = this.invt.find(`.${css.form}`)
     if (el.length > 0) {
       return el
     } else {
-      const invt = this
-      const div = $('<div>', {class: `${css} form`})
+      const div = $('<div>', {class: `${css.flex} ${css.form} form`})
       /*
         <div class="ROEQP-invt-form form">
           <button type="button" onclick="$('.source').text('...')">猫</button>
@@ -261,14 +343,6 @@ class Inventory {
       const placeholder = String(this.opts.placeholder).replace(/^\s+/mg,'').trim()
       const source = this.opts.source ?? this.source_from_samples()
       const textarea = $('<textarea>', {name: "source", width: '100%', rows: 20, text: source, placeholder: placeholder})
-
-      // <button type="button" onclick="$('.source').text('...')">猫</button>
-      $.each(Object(this.opts.samples), (name, text) => {
-        const button = $('<button>', {type: "button", text: name})
-        const source = text.replace(/^\s+/mg,'').trim()
-        button.click(() => { invt.update({source: source}) })
-        div.append(button)
-      })
 
       // <button type="button" onclick="ROEQP.scan(...)">再描画</button>
       const button = $('<button>', {type: "button", text: "再描画"})
@@ -296,12 +370,12 @@ class Inventory {
 
   // root -> view
   construct_view() {
-    const css = Inventory.CSS.view
-    const el = this.invt.find(`.${css}`)
+    const css = Inventory.CSS
+    const el = this.invt.find(`.${css.view}`)
     if (el.length > 0) {
       return el
     } else {
-      const div = $('<div>', {class: `${css} view`})
+      const div = $('<div>', {class: `${css.view} view`})
       this.invt.append(div)
       console.debug(`ROEQP: [#${this.invt.attr("id")}${css}] is not found. generated.`)
       return div
@@ -325,7 +399,31 @@ class Inventory {
 
 ROEQP = function() {}
 
+// 全体オプション(ページ管理)
+ROEQP.opts = {
+  invt_style: 'real', // 表示形式
+  view_name: true, // 装備名の表示
+  view_trim: true, // 余白詰め
+  smpl: true, // サンプル
+  bars: true, // %表示
+  form: true, // 入力フォーム
+}
+
+ROEQP.render_opts = function(o = ROEQP.opts) {
+  $('#ROEQP-c-view-trim').prop('checked', o.view_trim)
+  $('#ROEQP-c-view-name').prop('checked', o.view_name)
+  $('#ROEQP-c-smpl').prop('checked', o.smpl)
+  $('#ROEQP-c-bars').prop('checked', o.bars)
+  $('#ROEQP-c-form').prop('checked', o.form)
+}
+
+ROEQP.invts = []
 ROEQP.activate_opts = {}
+
+ROEQP.render = function() {
+  ROEQP.invts.forEach(invt => invt.render())
+}
+
 ROEQP.activate = function(target, opts) {
   opts = Object.assign({}, ROEQP.activate_opts, opts || {})
   $(target).each(function(index) {
@@ -333,15 +431,45 @@ ROEQP.activate = function(target, opts) {
     ROEQP.change_invt_style(root)
     const invt = new Inventory(root, [], opts)
     if (opts.update) invt.update()
+    ROEQP.invts.push(invt)
   })
-}
 
-ROEQP.new_inventory = function(target, opts) {
-  opts = Object.assign({}, ROEQP.activate_opts, opts || {})
-  const div = $('<div>')
-  $(target).append(div)
-  ROEQP.activate(div, opts)
-  ROEQP.change_align(ROEQP.Align.Bottom)
+  // add event handlers
+  const css = Inventory.CSS
+
+  $(document).on('change', '#ROEQP-c-smpl', function(){
+    ROEQP.opts.smpl = $(this).prop('checked')
+    ROEQP.invts.forEach(invt => invt.render())
+  });
+
+  $(document).on('change', '#ROEQP-c-view-trim', function(){
+    ROEQP.opts.view_trim = $(this).prop('checked')
+    ROEQP.invts.forEach(invt => invt.render_trim())
+  });
+
+  $(document).on('change', '#ROEQP-c-view-name', function(){
+    ROEQP.opts.view_name = $(this).prop('checked')
+    const value = ROEQP.opts.view_name ? "block" : "none"
+    $(`.${css.view} .name`).css("display", value)
+  });
+  $(document).on('change', '#ROEQP-c-bars', function(){
+    const key = `.${css.bars}`
+    const checked = $(this).prop('checked')
+    if (checked) {
+      $(key).show()
+    } else {
+      $(key).hide()
+    }
+  });
+  $(document).on('change', '#ROEQP-c-form', function(){
+    const key = `.${css.form}`
+    const checked = $(this).prop('checked')
+    if (checked) {
+      $(key).show()
+    } else {
+      $(key).hide()
+    }
+  });
 }
 
 ROEQP.change_invt_style = function(target, name = 'real') {
@@ -358,45 +486,16 @@ ROEQP.Align = {
 
 ROEQP.change_align = function(value) {
   const css = Inventory.CSS
-  const key = `.${css.bars}, .${css.form}`
+  const key = `.${css.flex}`
   switch (value) {
     case ROEQP.Align.Right:  $(key).css("float", "left"); break
     case ROEQP.Align.Bottom: $(key).css("float", "none"); break
   }
 };
 
-ROEQP.Bool = {
-  True: 'あり',
-  False: 'なし',
-};
-
-ROEQP.change_bars = function(value) {
-  const css = Inventory.CSS
-  const key = `.${css.bars}`
-  switch (value) {
-    case ROEQP.Bool.True:  $(key).show(); break
-    case ROEQP.Bool.False: $(key).hide(); break
-  }
-};
-
-ROEQP.change_form = function(value) {
-  const css = Inventory.CSS
-  const key = `.${css.form}`
-  switch (value) {
-    case ROEQP.Bool.True:  $(key).show(); break
-    case ROEQP.Bool.False: $(key).hide(); break
-  }
-};
-
 ROEQP.change_margin = function(value) {
   const css = Inventory.CSS
   $(`.${css.invt}`).css("margin", value)
-};
-
-ROEQP.enable_name = function(enabled) {
-  const css = Inventory.CSS
-  const value = enabled ? "block" : "none"
-  $(`.${css.view} .name`).css("display", value)
 };
 
 ROEQP.Frame = {
@@ -439,7 +538,7 @@ ROEQP.changelog = function(root, limit) {
   const data  = $(root).find('.data')
   const text  = data.text().replace(/^\s+/mg,'').trim()
   const tip   = text.split(/\n/).slice(0, limit).join("\n")
-  label.addClass("qtip tip-left")
+  label.addClass("qtip tip-right")
   label.attr("data-tip", tip)
   label.click(() => { data.toggle() })
 }
@@ -450,4 +549,55 @@ ROEQP.scan = function(text, invt) {
   } else {
     console.error(`ROEQP: no elements found named [${key}]`)
   }
-};
+}
+
+ROEQP.chara2_mode = function() {
+  const invts = $(`.${Inventory.CSS.invt}`)
+  if (invts.length == 1) {
+    const opts = {source: ''}
+    const div = $('<div>')
+    $('#ROEQP-data').append(div)
+    ROEQP.activate(div, opts)
+    ROEQP.change_align(ROEQP.Align.Bottom)
+  }
+}
+
+ROEQP.diff = function() {
+  ROEQP.chara2_mode()
+
+  const invt1 = ROEQP.invts[0]
+  const invt2 = ROEQP.invts[1]
+  const ratios1 = invt1.ratios
+  const ratios2 = invt2.ratios
+  const hash2 = {}
+  const new_ratios2 = []
+
+  ratios2.forEach(i => hash2[i.name] = i)
+
+  ratios1.forEach( r1 => {
+    const key = r1.name
+    const r2 = hash2[key]
+    if (r2) {
+      // r1, r2 の両方にある
+      delete hash2[key]
+      if (r1.val > r2.val) {
+        new_ratios2.push(new DiffRatio(r2, DiffRatio.Diff.Del))
+      } else if (r1.val < r2.val) {
+        new_ratios2.push(new DiffRatio(r2, DiffRatio.Diff.Add))
+      } else {
+        new_ratios2.push(new DiffRatio(r2, DiffRatio.Diff.Nop))
+      }
+    } else {
+      // r1 にだけある
+      const r = new EffectRatio(key, 0, r1.max, r1.unit)
+      new_ratios2.push(new DiffRatio(r, DiffRatio.Diff.Del))
+    }
+  })
+
+  // r2 にだけある
+  for (const [key, r2] of Object.entries(hash2)) {
+    new_ratios2.push(new DiffRatio(r2, DiffRatio.Diff.Add))
+  }
+  
+  invt2.render_bars(new_ratios2)
+}

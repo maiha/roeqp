@@ -3,35 +3,39 @@
     <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
     <title>RO装備</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.slim.min.js" integrity="sha512-jxwTCbLJmXPnV277CvAjAcWAjURzpephk0f0nO2lwsvcoDMqBdy1rh1jEwWWTabX1+Grdmj9GFAgtN22zrV0KQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="main.css?1674792353" type="text/css">
+    <link rel="stylesheet" href="main.css?1674831908" type="text/css">
     <link rel="stylesheet" href="tooltip.css?1673635296" type="text/css">
     <script type="text/javascript" charset="utf-8" src="roeqp.js?1674794076"></script>
-    <script type="text/javascript" charset="utf-8" src="main.js?1674794166"></script>
+    <script type="text/javascript" charset="utf-8" src="main.js?1674831908"></script>
   </head>
   <body>
     <div id="ROEQP-controls">
       <div class="ROEQP-control">
+        <div id="ROEQP-changelog">
+          <div class="label">更新情報</div>
+          <pre class="data">
+            2023/01/28 2画面比較モード
+            2023/01/27 %表示対応
+            2023/01/20 新アイテム(2023/01/17)
+            2023/01/15 画像を背景からimgに変更
+            2023/01/14 '#'をコメントとして追加
+            2023/01/13 短い名前が先にヒットする不具合を修正
+          </pre>
+        </div>
+      </div>
+      <div class="ROEQP-control">
         表示
         <button onclick="ROEQP.change_invt_style(null, 'real')">装着</button>
         <button onclick="ROEQP.change_invt_style(null, 'default')">通常</button>
+        <input type="checkbox" id="ROEQP-c-smpl"><label for="ROEQP-c-smpl">例</label>
+        <input type="checkbox" id="ROEQP-c-view-trim"><label for="ROEQP-c-view-trim">trim</label>
+        <input type="checkbox" id="ROEQP-c-view-name"><label for="ROEQP-c-view-name">名前</label>
+        <input type="checkbox" id="ROEQP-c-bars"><label for="ROEQP-c-bars">%表示</label>
+        <input type="checkbox" id="ROEQP-c-form"><label for="ROEQP-c-form">入力フォーム</label>
       </div>
       <div class="ROEQP-control">
-        名前
-        <button onclick="ROEQP.enable_name(true)">あり</button>
-        <button onclick="ROEQP.enable_name(false)">なし</button>
-      </div>
-      <div class="ROEQP-control">
-        %表示
-        <button onclick="ROEQP.change_bars(ROEQP.Bool.True)">あり</button>
-        <button onclick="ROEQP.change_bars(ROEQP.Bool.False)">なし</button>
-      </div>
-      <div class="ROEQP-control">
-        入力
-        <button onclick="ROEQP.change_form(ROEQP.Bool.True)">あり</button>
-        <button onclick="ROEQP.change_form(ROEQP.Bool.False)">なし</button>
-      </div>
-      <div class="ROEQP-control">
-        <button onclick="ROEQP.new_inventory('#ROEQP-data', {source: ''})">＋キャラ追加</button>
+        <button onclick="ROEQP.chara2_mode()">2画面</button>
+        <button onclick="ROEQP.diff()">比較</button>
       </div>
       <div class="ROEQP-control">
         並び
@@ -51,18 +55,6 @@
         <button onclick="ROEQP.change_margin('50px')">大</button>
         <button onclick="ROEQP.change_margin(0)">なし</button>
       </div>
-      <div class="ROEQP-control">
-        <div id="ROEQP-changelog">
-          <div class="label">更新情報</div>
-          <pre class="data">
-            2023/01/27 %表示対応
-            2023/01/20 新アイテム(2023/01/17)
-            2023/01/15 画像を背景からimgに変更
-            2023/01/14 '#'をコメントとして追加
-            2023/01/13 短い名前が先にヒットする不具合を修正
-          </pre>
-        </div>
-      </div>
     </div>
 
     <div id="ROEQP-data">
@@ -72,7 +64,7 @@
     <div id="ROEQP-samples" style="display: none;">
       <div class="sample" data-label="ミミミ" data-source="https://ragnarokonline.gungho.jp/campaign_event/event/bio-labo-quest-202211.html">
         %80%[MaxHP+%]
-        %28/80%[ASPD+%]
+        %28/60%[ASPD+%]
         %240/300[Atk/Matk+]
         %20/30[全ステ+]
         %103%[スキルディレイ-]
@@ -80,13 +72,13 @@
         %48%[詠唱時間-]
         %5/5[ExtraStr]
         %100%[Def/Mdef無視]
-        %100%[詠唱妨害不可]
+        %1/1[詠唱妨害不可]
         %15/95%[無属性耐性]
         %90/95%[水属性耐性]
-        %500/500[撃破時HP+]
-        %50/50[撃破時SP+]
-        %250/500[5秒毎にHP+]
-        %30/50[5秒毎にSP+]
+        %500/1000[撃破時HP+]
+        %50/100[撃破時SP+]
+        %250/2500[5秒毎にHP+]
+        %30/250[5秒毎にSP+]
 
         +9黎明のマジェスティックゴート
         くわえたチョコスティック
@@ -295,24 +287,31 @@
       </div>
 
       <div class="sample" data-label="10PoM">
-        %100%[石化耐性]
+        %50%[石化耐性]
         %100%[Def無視]
         %50%[固定詠唱時間-]
         %1/1[死の欲動]
         %20%[スキルディレイ-]
+        %25%[全種族ダメージ]
         +10ファントムオブマスカレード
       </div>
         
       <div class="sample" data-label="10シャム">
         %70%[固定詠唱時間-]
         %100%[スキルディレイ-]
+        %25%[全属性ダメージ]
         %1/1[グリード]
         %1/1[ノクバ耐性]
         %1/1[豪傑]
-        %200/500[Atk+]
+        %1/1[復活時完全回復]
         %30/30[全ステ+(確率)]
+        %4000/5000[MaxHP+]
+        %400/500[MaxSP+]
+        %15/50%[MaxHP+%]
+        %15/50%[MaxSP+%]
+        %200/500[Atk+]
         %15/100[Mdef]
-        %10/60[ASPD+]
+        %10/60[ASPD+%]
         +10抱きつきシャムネコ
       </div>
         
@@ -332,6 +331,9 @@
           placeholder: "ファントムオブマスカレード\nもふもふラブリーフォックス",
           samples: ROEQP.read_samples('#ROEQP-samples'),
         };
+        // オプションの初期化
+        ROEQP.render_opts()
+        // インベントリの有効化
         ROEQP.activate('#ROEQP-data .invt', {update: true})
       })
     </script>
