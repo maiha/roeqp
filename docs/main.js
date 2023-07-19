@@ -275,7 +275,7 @@ class Inventory {
     grid.empty()
 
     if (item) {
-      grid.append($('<img>', {class: "icon", src: `https://rotool.gungho.jp/icon/${item.id}.png`}))
+      grid.append($('<img>', {class: "icon", src: `https://rotool.gungho.jp/images/item/${item.id}.png`}))
       grid.append($('<div>', {class: "name", text: item.label()}))
     }
   }
